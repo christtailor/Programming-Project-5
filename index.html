@@ -1,0 +1,90 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <H1>Select a major</H1><br>
+
+    <Button id="cit-majors-btn" >CIT Majors</Button> <button style="margin-left:15px" id="business-majors-btn">Business Majors</button> <br><br>
+
+    <h2>We filter our dataset by major</h2>
+
+    <table id="my-table">
+    <thead>
+    <tr>
+    <th>Name</th>
+    <th>Major</th>
+    <th>Midterm</th>
+    <th>Final</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+
+    </table>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+
+    <script id="table-template" type="text/x-handlebars-template">
+        {{#each this}}
+        <tr>
+            <td>{{name}}</td>
+            <td>{{major}}</td>
+            <td>{{midterm}}</td>
+            <td>{{final}}</td>
+        </tr>
+        {{/each}}
+    </script>
+
+<script>
+    
+
+const citMajorsBtn = document.querySelector("#cit-majors-btn");
+const businessMajorsBtn = document.querySelector("#business-majors-btn");
+
+citMajorsBtn.addEventListener('click',loadStudentData);
+businessMajorsBtn.addEventListener('click',loadStudentData);
+
+function loadStudentData (event) {
+ 
+    const major = event.target.innerHTML;
+    let finalData = [];
+    let template = Handlebars.compile($("#table-template").html());
+    
+     const dataUrl = "https://raw.githubusercontent.com/ctailor001/Programming-Project-5/main/cit5students.json"
+ 
+
+   let data;   
+   
+   $.ajax({url: dataUrl,'type' : 'GET', dataType: "json",'success':function(res) {
+       
+    console.log("res"+res); data = res;
+    
+       if(major === "CIT Majors"){
+       data.forEach((element)=>{
+           if(element.major==='CIT')
+           finalData.push(element);
+       })
+       }
+        else{
+         data.forEach((element)=>{
+        if(element.major==='BUS')
+        finalData.push(element);
+        })
+       }
+
+       $('#my-table tbody').html(template(finalData));
+    
+    }});
+
+ 
+}
+</script>
+    
+</body>
+</html>
